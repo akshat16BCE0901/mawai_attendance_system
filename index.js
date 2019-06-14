@@ -6,6 +6,9 @@ var request = require("request");
 var mongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/locus";
 var nodemailer = require('nodemailer');
+
+var port  = process.env.PORT || 3000;
+
 app.set("view-engine","ejs");
 app.use(express.static(__dirname+"/public"));
 app.use(
@@ -215,7 +218,7 @@ app.post('/submitlocation',function(req,res)
 
 });
 app.use('/things',things);
-app.listen(3000,function()
+app.listen(port,function()
 {
     console.log("Server listening");
 });
