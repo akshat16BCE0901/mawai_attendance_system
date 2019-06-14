@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        width: 100%;
+        height: 400px;
+        border: 2px solid blue;
+       }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/typewriter-effect/dist/core.js"></script>
+  </head>
+  <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+
+                </div>
+                <div class="col-md-6">
+                    <h3 align='center'>My Google Maps Demo</h3>
+                    <h4 align='center'>Click on the position marker to mark attendance</h4>
+                    <div id="map"></div>
+                    <form style="display: none;" method="post" action="http://localhost:3000/submitlocation">
+                        <input name="name" type="hidden" value="<%= data.empid %>" />
+                        <input name="lat" type="hidden" id="lat" value="" />
+                        <input name="long" type="hidden" id="long" value="" />
+                        <input type="submit" value="submit" id="submitbutton" />
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    
+                </div>
+            </div>
+        </div>
+    <script>
+        var x = document.getElementById("demo");
+        var url = "";
+        function initMap() {
+            var a=0;
+            var b=0;
+            navigator.geolocation.getCurrentPosition(function(position)
+            {
+                a = position.coords.latitude;
+                b = position.coords.longitude;
+                console.log(a);
+                console.log(b);
+                var uluru = {lat : a,lng :b};
+                var map = new google.maps.Map(
+                document.getElementById('map'), {zoom: 20, center: uluru});
+                var marker = new google.maps.Marker({position: uluru, map: map});
+                marker.addListener('click', function() {
+
+                    $("#lat").val(a);
+                    $("#long").val(b);
+                    $("#submitbutton").trigger('click');
+
+                });
+            });
+        }
+        
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACjEFG5Hufa0S1NlDL1IH0bphLn334Ciw&callback=initMap">
+    </script>
+  </body>
+</html>

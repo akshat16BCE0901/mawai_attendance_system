@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html> 
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        width: 1350px;
+        height: 500px;
+        border: 2px solid blue;
+       }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/typewriter-effect/dist/core.js"></script>
+    
+    <script src="http://maps.google.com/maps/api/js?key=AIzaSyACjEFG5Hufa0S1NlDL1IH0bphLn334Ciw" type="text/javascript"></script>
+  </head> 
+<body>
+    <div class="container-fluid">
+        <div class="row">
+                <h3 align='center'>Click on the marker to view the respective location</h3>
+                <div class="col-12" id="map"></div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-8">
+              <table style="border:2px solid black;"  border="1" class='table table-hover table-striped'>
+                <% if(status=="specific"){ %>
+                <tr>
+                  <th colspan="6">
+                    <h3 align='center'> Attendance details of <%=data[0].empid %></h3>
+                  </th>
+                </tr>
+                <% }%>
+                <tr>
+                  <th>Employee ID</th>
+                  <th>Latitude</th>
+                  <th>Longitude</th>
+                  <th>Date</th>
+                  <th>Time (in 24:00 hrs format)</th>
+                  <th>Address</th>
+                </tr>
+                  <% data.forEach(function(detail){ %>
+                    <tr>
+                        <td><%= detail.empid %></td>
+                        <td><%= detail.curr_lat %></td>
+                        <td><%= detail.curr_long %></td>
+                        <td><%= detail.punch_date %></td>
+                        <td><%= detail.punch_time %></td>
+                        <td><%= detail.locationAddress %></td>
+                    </tr>
+                    <% }); %>
+              </table>
+            </div>
+            <div  style="border:2px solid black;" class="col-md-4">
+              <h3>View attendance by employee ID</h3>
+              <form  method="post" action="http://localhost:3000/viewbyid">
+                <table  class="table-striped table table-hover">
+                  <tr>
+                    <td>Select Employee ID - </td>
+                    <td>
+                      <select name="empid">
+                          <option value="">Select User ID</option>
+                          <% names.forEach(function(detail){ %>
+                            <option value="<%= detail %>"><%= detail %></option>
+                          <% }); %>
+                        
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><button type="reset" class="btn btn-primary">RESET</button></td>
+                    <td><button type="submit" class="btn btn-primary">SUBMIT</button></td>
+                  </tr>
+                </table>
+              </form>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+    
+    var locations = [
+      <% 
+      
+        if(data.length)
+        {
+          data.forEach(function(details){%>
+
+            ['<%=details.locationAddress %>',<%= details.curr_lat %>,<%= details.curr_long %>],
+
+          <%});
+        }
+      
+      %>
+    ];
+      console.log(locations);
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 7,
+      center: new google.maps.LatLng(28.6227867,77.378548),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+  </script>
+  
+</body>
+</html>
