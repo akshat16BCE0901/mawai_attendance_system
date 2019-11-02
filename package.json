@@ -19,7 +19,7 @@
     "ejs": "^2.6.1",
     "express": "^4.17.1",
     "mongo": "^0.1.0",
-    "mongoose": "^5.5.13",
+    "mongoose": "^5.7.5",
     "nodemailer": "^6.2.1",
     "request": "^2.88.0"
   }
